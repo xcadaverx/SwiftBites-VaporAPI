@@ -35,7 +35,6 @@ final class UsersController: RouteCollection {
         return try req.content.decode(User.self).flatMap(to: User.self) { user in
             
             return try User.query(on: req).filter(\User.username == user.username).first().flatMap(to: User.self) { existingUser in
-             
                 guard existingUser == nil else {
                     throw Abort(.conflict, reason: "User Already Exists.")
                 }
