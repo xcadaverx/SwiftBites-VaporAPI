@@ -27,10 +27,17 @@ public func configure(
 
     // Configure PostgreSQL
     let dbConfig: PostgreSQLDatabaseConfig
-    if env.isRelease {
-        dbConfig = PostgreSQLDatabaseConfig(hostname: "localhost", port: 5432, username: "vapor", database: "vapor", password: "password")
+    if let dbURL = Environment.get("DATABASE_URL"), env.isRelease {
+        dbConfig = try PostgreSQLDatabaseConfig(url: dbURL)
     } else {
-        dbConfig = PostgreSQLDatabaseConfig(hostname: "localhost", port: 5432, username: "vapor", database: "vapor", password: "password")
+        
+        let hostname = Environment.get("DATABASE_HOSTNAME") ?? "localhost"
+        let port = Int(Environment.get("DATABASE_PORT")) ?? 5432
+        let username = Environment.get("DATABASE_USERNAME") ?? "dawilliams"
+        let database = Environment.get("DATABASE_DB") ?? "postgresql"
+        let password = Environment.get("DATABASE_PASSWORD") ?? "password"
+        
+        dbConfig = PostgreSQLDatabaseConfig(hostname: hostname, port: port, username: username, database: database, password: password)
     }
     
     let postgresql = PostgreSQLDatabase(config: dbConfig)
@@ -50,4 +57,14 @@ public func configure(
     User.Public.defaultDatabase = .psql
     
     services.register(migrations)
+}
+
+extension Int {
+    
+    init?(_ string: String?) {
+        guard let stringValue = string else { return nil }
+        guard let intValue = Int(stringValue) else { return nil }
+        
+        self = intValue
+    }
 }
