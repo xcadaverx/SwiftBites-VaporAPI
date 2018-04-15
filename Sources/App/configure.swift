@@ -28,9 +28,9 @@ public func configure(
     // Configure PostgreSQL
     let dbConfig: PostgreSQLDatabaseConfig
     if env.isRelease {
-        dbConfig = PostgreSQLDatabaseConfig(hostname: "localhost", port: 5432, username: "dawilliams", database: "postgres", password: nil)
+        dbConfig = PostgreSQLDatabaseConfig(hostname: "localhost", port: 5433, username: "xcadaverx", database: "postgres", password: nil)
     } else {
-        dbConfig = PostgreSQLDatabaseConfig(hostname: "localhost", port: 5432, username: "dawilliams", database: "postgres", password: nil)
+        dbConfig = PostgreSQLDatabaseConfig(hostname: "localhost", port: 5433, username: "xcadaverx", database: "postgres", password: nil)
     }
     
     let postgresql = PostgreSQLDatabase(config: dbConfig)
