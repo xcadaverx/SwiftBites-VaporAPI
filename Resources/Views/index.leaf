@@ -1,0 +1,85 @@
+#set("title") { Welcome to SwiftBites! }
+
+#set("body") {
+
+  <!-- Nav Header -->
+  <nav class="bg-white w-100 flex justify-between">
+		<a class="link black-70 hover-black no-underline flex items-center pa3" href="">
+		  <img src="/images/logo.png" class="h3 ml3-ns"/>
+		</a>
+		<div class="flex-grow pa3 flex items-center">
+		  <a class="f6 link dib orange-text dim mr3 mr3-ns" href="#0">Login</a>
+		  <a class="f6 dib white orange-bg bg-animate dim no-underline pv2 ph3 br-pill mr3-ns" href="#0">Sign Up</a>
+		</div>
+	</nav>
+
+  <!-- Main View -->
+  <div class="flex-ns justify-center items-center self-center h-100 w-100">
+    
+    <!-- Center "Content" View -->
+    <div id="content" class="h-85-ns w-100 w-75-ns bg-white br1-ns shadow-1-ns flex flex-column">
+      
+      <!-- Title Bar -->
+      <div id="titleBar" class="w-100 h3 pl4 orange-bg flex justify-between">
+        
+        <!-- Filter Button -->
+        <div class="white b self-center pr3">FILTER</div>
+        <!-- End Filter Button -->
+
+        <!-- Search Bar -->
+        <div class="flex items-center">
+          <form class="pr3">
+            <fieldset class="cf bn pa1 ma0">
+                <input class="f6 ph3 pv2 input bn fl black-80 bg-white w-100 br-pill" placeholder="Search" type="text" name="search" id="search" />
+            </fieldset>
+          </form>
+          <div class="fl white b pr4 pl2 f3">+</div>
+        </div>
+        <!-- End Search Bar -->
+
+      </div>
+      <!-- End Title Bar -->
+      
+      <!-- List View -->
+      <div class="w-100 bg-white overflow-y-auto h-100 flex flex-column w-100">
+        
+        #for(bite in bites) {
+          <!-- Bite Views -->
+          <div class="fl h-100 w-100 h4-ns pa2 pv2-ns bg-white bite">
+            <div class="fl w-25 w-10-ns pa3 flex items-center justify-center h-100">
+              <img src="/images/bookmark.png" class="w1 pr2"/>
+              <div class="flex items-center justify-center fl h-100 w-50-ns f6 b orange-text">5</div>
+            </div>
+            <div class="fl w-75 w-60-ns h-100 flex flex-column justify-center pl2">
+              <div class="f4 b">#(bite.title)</div>
+              <div class="f6 black-30">bite.date</div>
+              <div class="f6">Submitted by #(bite.authorUsername)</div>
+            </div>
+
+            <!-- Tag List -->  
+            <div class="fr w-75 w-30-ns h-100-ns flex items-center justify-center pr2">
+                #for(tag in bite.tags) {
+                  <!-- Tag -->
+                  <div class="tc-ns flex justify-center-ns content-center flex-wrap">
+                    <a class="f6 pointer link dim br-pill ph3 mh1 mv1 dib white bg-blue">#(tag.title)</a>
+                  </div>
+                  <!-- End Tag -->
+                }
+            </div>
+            <!-- End Tag List -->
+
+          </div>
+          <!-- End Bite Views -->
+        }
+
+      </div>
+      <!-- End List View -->
+
+    </div>
+    <!-- End Center Content View -->
+
+  </div>
+  <!-- End Main View -->
+}
+
+#embed("base")

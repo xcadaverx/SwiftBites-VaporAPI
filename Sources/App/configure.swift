@@ -1,5 +1,6 @@
 import FluentPostgreSQL
 import Vapor
+import Leaf
 import Authentication
 
 public func configure(
@@ -11,7 +12,8 @@ public func configure(
     /// Register providers first
     try services.register(FluentPostgreSQLProvider())
     try services.register(AuthenticationProvider())
-
+    try services.register(LeafProvider())
+    
     /// Register routes to the router
     let router = EngineRouter.default()
     try routes(router)
@@ -20,7 +22,6 @@ public func configure(
     /// Register middleware
     var middlewares = MiddlewareConfig() // Create _empty_ middleware config
     middlewares.use(FileMiddleware.self) // Serves files from `Public/` directory
-    middlewares.use(DateMiddleware.self) // Adds `Date` header to responses
     middlewares.use(ErrorMiddleware.self) // Catches errors and converts to HTTP response
     middlewares.use(SessionsMiddleware.self) // Enables Sessions
     services.register(middlewares)
@@ -28,21 +29,24 @@ public func configure(
     // Configure PostgreSQL
     let dbConfig: PostgreSQLDatabaseConfig
     if let dbURL = Environment.get("DATABASE_URL"), env.isRelease {
-        dbConfig = try PostgreSQLDatabaseConfig(url: dbURL)
+        dbConfig = PostgreSQLDatabaseConfig(url: dbURL)!
     } else {
         let hostname = Environment.get("DATABASE_HOSTNAME") ?? "localhost"
         let port = Int(Environment.get("DATABASE_PORT")) ?? 5432
         let username = Environment.get("DATABASE_USER") ?? "dawilliams"
-        let database = Environment.get("DATABASE_DB") ?? "postgresql"
-        let password = Environment.get("DATABASE_PASSWORD") ?? "password"
+        let database = Environment.get("DATABASE_DB") ?? "postgres"
         
-        dbConfig = PostgreSQLDatabaseConfig(hostname: hostname, port: port, username: username, database: database, password: password)
+        dbConfig = PostgreSQLDatabaseConfig(hostname: hostname, port: port, username: username, database: database)
     }
     
     let postgresql = PostgreSQLDatabase(config: dbConfig)
-    var databases = DatabaseConfig()
+    var databases = DatabasesConfig()
     databases.add(database: postgresql, as: .psql)
     services.register(databases)
+    
+    // Configure Prefers
+    config.prefer(MemoryKeyedCache.self, for: KeyedCache.self)
+    config.prefer(LeafRenderer.self, for: ViewRenderer.self)
 
     /// Configure migrations
     var migrations = MigrationConfig()

@@ -28,7 +28,7 @@ final class BitesController: RouteCollection {
     
     func getBiteHandler(_ req: Request) throws -> Future<Bite> {
 
-        return try req.parameter(Bite.self)
+        return try req.parameters.next(Bite.self)
     }
     
     func getAllBitesHandler(_ req: Request) throws -> Future<[Bite]> {
@@ -50,7 +50,7 @@ final class BitesController: RouteCollection {
             let bite = try Bite(title: biteCreationData.title, description: biteCreationData.description, authorID: user.requireID())
             
             // determine which tags already exist in the database
-            let existingTagsFuture = try Tag.query(on: req).filter(\Tag.title ~~ biteCreationData.tags).all()
+            let existingTagsFuture = Tag.query(on: req).filter(\Tag.title ~~ biteCreationData.tags).all()
             
             return flatMap(to: Bite.self, bite.create(on: req), existingTagsFuture) { createdBite, existingTags -> Future<Bite> in
             
@@ -82,7 +82,7 @@ final class BitesController: RouteCollection {
     
     func deleteBiteHandler(_ req: Request) throws -> Future<HTTPStatus> {
         
-        return try req.parameter(Bite.self).flatMap(to: HTTPStatus.self) { bite in
+        return try req.parameters.next(Bite.self).flatMap(to: HTTPStatus.self) { bite in
             
             let userID = try req.requireAuthenticated(User.self).requireID()
             
@@ -108,10 +108,10 @@ final class BitesController: RouteCollection {
         let separators = CharacterSet(charactersIn: ", ")
         let terms = searchQuery.components(separatedBy: separators)
         
-        return try Bite.query(on: req).group(.or) { or in
-            try terms.forEach { term in
-                try or.filter(\Bite.title ~~ term)
-                try or.filter(\Bite.description ~~ term)
+        return Bite.query(on: req).group(.or) { or in
+            terms.forEach { term in
+                or.filter(\Bite.title ~~ term)
+                or.filter(\Bite.description ~~ term)
                 // try or.filter(\Bite.tags ~~ term) // Bite.tags is a Siblings<Bite, Tag, BiteTagPivot>
             }
         }.all()
@@ -121,7 +121,7 @@ final class BitesController: RouteCollection {
     
     func getBiteTagsHandler(_ req: Request) throws -> Future<[Tag]> {
         
-        return try req.parameter(Bite.self).flatMap(to: [Tag].self) { bite in
+        return try req.parameters.next(Bite.self).flatMap(to: [Tag].self) { bite in
             
             return try bite.tags.query(on: req).all()
         }

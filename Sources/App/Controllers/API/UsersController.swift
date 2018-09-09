@@ -27,19 +27,19 @@ final class UsersController: RouteCollection {
     
     func getUserHandler(_ req: Request) throws -> Future<User.Public> {
         
-        return try req.parameter(User.Public.self)
+        return try req.parameters.next(User.Public.self)
     }
     
     func createUserHandler(_ req: Request) throws -> Future<User> {
         
         return try req.content.decode(User.self).flatMap(to: User.self) { user in
             
-            return try User.query(on: req).filter(\User.username == user.username).first().flatMap(to: User.self) { existingUser in
+            return User.query(on: req).filter(\User.username == user.username).first().flatMap(to: User.self) { existingUser in
                 guard existingUser == nil else {
                     throw Abort(.conflict, reason: "User Already Exists.")
                 }
                 
-                user.password = try String.convertFromData(BCrypt.hash(user.password, cost: 4))
+                user.password = try BCrypt.hash(user.password, cost: 4)
                 
                 return user.save(on: req)
             }
@@ -56,7 +56,7 @@ final class UsersController: RouteCollection {
     
     func getBitesHandler(_ req: Request) throws -> Future<[Bite]> {
         
-        return try req.parameter(User.self).flatMap(to: [Bite].self) { user in
+        return try req.parameters.next(User.self).flatMap(to: [Bite].self) { user in
             
             return try user.bites.query(on: req).all()
         }

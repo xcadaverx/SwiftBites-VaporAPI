@@ -26,8 +26,8 @@ final class TagsController: RouteCollection {
     
     func getTagByNameHandler(_ req: Request) throws -> Future<Tag> {
 
-        let tagTitle = try req.parameter(String.self)
-        let query = try Tag.query(on: req).filter(\Tag.title == tagTitle)
+        let tagTitle = try req.parameters.next(String.self)
+        let query = Tag.query(on: req).filter(\Tag.title == tagTitle)
 
         return query.first().map(to: Tag.self) { tag in
 
@@ -41,12 +41,12 @@ final class TagsController: RouteCollection {
     
     func getTagByIDHandler(_ req: Request) throws -> Future<Tag> {
         
-        return try req.parameter(Tag.self)
+        return try req.parameters.next(Tag.self)
     }
     
     func getBitesForTagHandler(_ req: Request) throws -> Future<[Bite]> {
         
-        return try req.parameter(Tag.self).flatMap(to: [Bite].self) { tag in
+        return try req.parameters.next(Tag.self).flatMap(to: [Bite].self) { tag in
             
             return try tag.bites.query(on: req).all()
         }
@@ -62,9 +62,9 @@ final class TagsController: RouteCollection {
         
         let terms = searchQuery.components(separatedBy: " ")
         
-        return try Tag.query(on: req).group(.or) { or in
-            try terms.forEach { term in
-                try or.filter(\Tag.title ~~ term)
+        return Tag.query(on: req).group(.or) { or in
+            terms.forEach { term in
+                or.filter(\Tag.title ~~ term)
             }
         }.all()
     }

@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Tachyons CSS -->
+	<link rel="stylesheet" href="https://unpkg.com/tachyons@4.6.1/css/tachyons.min.css"/>
+	
+	<!-- App CSS -->
+	<link rel="stylesheet" href="/styles/app.css">
+
+	<title>#get(title)</title>
+  </head>
+  <body class="bg avenir h-100 flex-ns flex-column">
+	#get(body)
+  </body>
+</html>

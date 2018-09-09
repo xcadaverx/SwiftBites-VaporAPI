@@ -1,0 +1,28 @@
+body, html {
+    height: 100vh;
+}
+
+.orange-bg {
+    background: #fe7a46;
+}
+
+.orange-text {
+    color: #fe7a46;
+}
+
+.bg {
+    background-image: url("/images/background-lg.png");
+    background-size: 100% 66%;
+    background-repeat: no-repeat; 
+    background-position: bottom;
+}
+
+@media(min-width: 479px) {
+    .h-85-ns {
+        height: 85%;
+    }
+}
+
+.bite:nth-child(2n) {
+    background: #f7f7f7;
+}
