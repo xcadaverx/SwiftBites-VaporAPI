@@ -1,0 +1,13 @@
+<div class="fl h-100 w-100 h4-ns pa2 pv2-ns bg-white bite">
+    <div class="fl w-25 w-10-ns pa3 flex items-center justify-center h-100">
+        <img src="/images/bookmark.png" class="w1 pr2"/>
+        <div class="flex items-center justify-center fl h-100 w-50-ns f6 b orange-text">5</div>
+    </div>
+    <div class="fl w-75 w-60-ns h-100 flex flex-column justify-center pl2">
+        <div class="f4 b">#(bite.title)</div>
+        <div class="f6 black-30">bite.date</div>
+        <div class="f6">Submitted by #(bite.authorUsername)</div>
+    </div>
+
+    #embed("tagList")
+</div>

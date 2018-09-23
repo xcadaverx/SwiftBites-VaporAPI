@@ -1,0 +1,15 @@
+<div id="titleBar" class="w-100 h3 pl4 orange-bg flex justify-between">
+
+    #embed("filterButton")
+
+    <!-- Search Bar -->
+    <div class="flex items-center">
+        <form class="pr3">
+        <fieldset class="cf bn pa1 ma0">
+            <input class="f6 ph3 pv2 input bn fl black-80 bg-white w-100 br-pill" placeholder="Search" type="text" name="search" id="search" />
+        </fieldset>
+        </form>
+        <div class="fl white b pr4 pl2 f3">+</div>
+    </div>
+    <!-- End Search Bar -->
+</div>

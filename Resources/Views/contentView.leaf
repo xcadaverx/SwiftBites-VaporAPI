@@ -1,0 +1,4 @@
+<div id="content" class="h-85-ns w-100 w-75-ns bg-white br1-ns shadow-1-ns flex flex-column">
+    #embed("titleBar")
+    #embed("biteList")
+</div>

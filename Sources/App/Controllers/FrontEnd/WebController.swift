@@ -21,6 +21,8 @@ class WebController: RouteCollection {
     
     private func index(_ req: Request) throws -> Future<View> {
         
+        let user = try req.authenticated(User.self)
+        
         return Bite.query(on: req).all().flatMap(to: View.self) { bites in
             
             let futureBitesContext = try bites.map { bite -> EventLoopFuture<BiteContext> in
@@ -29,7 +31,7 @@ class WebController: RouteCollection {
                 
                 return flatMap(to: BiteContext.self, futureTags, futureAuthor) { tags, author in
                     return Future.map(on: req) {
-                        return BiteContext(title: bite.title, description: bite.description, authorUsername: author.name, tags: tags)
+                        return BiteContext(user: user, title: bite.title, description: bite.description, authorUsername: author.name, tags: tags)
                     }
                 }
             }
@@ -51,6 +53,7 @@ struct BitesContext: Encodable {
 
 struct BiteContext: Content {
     
+    let user: User?
     let title: String
     let description: String
     let authorUsername: String

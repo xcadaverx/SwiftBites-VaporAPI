@@ -1,0 +1,5 @@
+<div class="w-100 bg-white overflow-y-auto h-100 flex flex-column w-100">
+    #for(bite in bites) {
+        #embed("bite")
+    }
+</div>

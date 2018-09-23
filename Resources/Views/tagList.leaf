@@ -1,0 +1,5 @@
+<div class="fr w-75 w-30-ns h-100-ns flex items-center justify-center pr2">
+    #for(tag in bite.tags) {
+        #embed("tag")
+    }
+</div>
