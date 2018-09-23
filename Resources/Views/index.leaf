@@ -1,4 +1,4 @@
-#set("title") { Welcome to SwiftBites! }
+#set("title") { SwiftBites }
 
 #set("body") {
 

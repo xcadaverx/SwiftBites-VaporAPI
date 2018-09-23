@@ -6,6 +6,10 @@ body, html {
     background: #fe7a46;
 }
 
+.orange-bg-light {
+    background: #ff8f62;
+}
+
 .orange-text {
     color: #fe7a46;
 }
@@ -24,5 +28,21 @@ body, html {
 }
 
 .bite:nth-child(2n) {
-    background: #f7f7f7;
+    background: #e9e9e9;
+}
+
+.hover-orange:hover {
+    color: #fe7a46;
+}
+
+.hover-orange:focus {
+    color: #fe7a46;
+}
+
+.hover-bg-orange:hover {
+    background-color: #fe7a46;
+}
+
+.hover-bg-orange:focus {
+    background-color: #fe7a46;
 }

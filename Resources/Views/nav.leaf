@@ -1,13 +1,13 @@
 <nav class="bg-white w-100 flex justify-between">
-    <a class="link black-70 hover-black no-underline flex items-center pa3" href="">
+    <a class="link black-70 hover-black no-underline flex items-center pa3" href="/">
         <img src="/images/logo.png" class="h2 ml3-ns"/>
     </a>
     <div class="flex-grow pa3 flex items-center">
     #if(user) {
-    Logged in
+        <a class="f6 link dib orange-text dim mr3 mr3-ns" href="/logout">Logout</a>
     } else {
-        <a class="f6 link dib orange-text dim mr3 mr3-ns" href="#0">Login</a>
-    <a class="f6 dib white orange-bg bg-animate dim no-underline pv1 ph3 br-pill mr3-ns" href="#0">Sign Up</a>
+        <a class="f6 link dib orange-text dim mr3 mr3-ns" href="/login">Login</a>
+        <a class="f6 dib white orange-bg bg-animate dim no-underline pv1 ph3 br-pill mr3-ns" href="#0">Sign Up</a>
     }
     </div>
 </nav>

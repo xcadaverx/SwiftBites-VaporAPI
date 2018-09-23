@@ -14,9 +14,11 @@ class WebController: RouteCollection {
     
     func boot(router: Router) throws {
         
-        let webGroup = router.grouped("web")
-
-        webGroup.get(use: index)
+        let authSessionRoutes = router.grouped(User.authSessionsMiddleware())
+        
+        authSessionRoutes.get(use: index)
+        authSessionRoutes.get("login", use: login)
+        authSessionRoutes.post("login", use: loginPostHandler)
     }
     
     private func index(_ req: Request) throws -> Future<View> {
@@ -31,29 +33,60 @@ class WebController: RouteCollection {
                 
                 return flatMap(to: BiteContext.self, futureTags, futureAuthor) { tags, author in
                     return Future.map(on: req) {
-                        return BiteContext(user: user, title: bite.title, description: bite.description, authorUsername: author.name, tags: tags)
+                        return BiteContext(title: bite.title, description: bite.description, authorUsername: author.name, tags: tags)
                     }
                 }
             }
             
             return futureBitesContext.flatten(on: req).flatMap(to: View.self) { biteContexts in
-                let bitesContext = BitesContext(bites: biteContexts)
+                let bitesContext = BitesContext(user: user, bites: biteContexts)
                 return try req.view().render("index", bitesContext)
             }
         }
     }
+    
+    private func login(_ req: Request) throws -> Future<View> {
+        
+        let user = try req.authenticated(User.self)
+        
+        if user != nil {
+            return try self.index(req)
+        } else {
+            return try req.view().render("login")
+        }
+    }
+    
+    private func loginPostHandler(_ req: Request) throws -> Future<Response> {
+        
+        return try req.content
+            .decode(LoginPostData.self)
+            .flatMap(to: Response.self) { data in
+                let verify = try req.make(BCryptDigest.self)
+                return User.authenticate(username: data.username, password: data.password, using: verify, on: req).map(to: Response.self) { user in
+                    guard let user = user else {
+                        return req.redirect(to: "/login")
+                    }
+                    try req.authenticateSession(user)
+                    return req.redirect(to: "/")
+                }
+        }
+    }
 }
 
+struct LoginPostData: Content {
 
+    let username: String
+    let password: String
+}
 
 struct BitesContext: Encodable {
-    
+
+    let user: User?
     let bites: [BiteContext]
 }
 
 struct BiteContext: Content {
     
-    let user: User?
     let title: String
     let description: String
     let authorUsername: String
